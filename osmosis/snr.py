@@ -142,9 +142,8 @@ def probability_curve(data, bvals, bvecs, mask):
     bval_list, bval_ind, unique_b = separate_bvals(bvals)
     idx_mask = np.where(mask)
     
-    unique_b_list = list(unique_b)
     if 0 in unique_b:
-      unique_b_list.remove(0)
+        unique_b = unique_b[1:]
     
     legend_list = list()
     all_prop = all_snr(data, bvals, mask)[idx_mask]
@@ -153,17 +152,17 @@ def probability_curve(data, bvals, bvecs, mask):
     fig = mpl.probability_hist(all_prop)
     legend_list.append('All b values')
     
-    idx_array = np.arange(len(unique_b_list))
     txt_height = 0.12
-    for l in idx_array:
-      prop = b_snr(data, bvals, unique_b_list[l], mask)[idx_mask]
+    for l in np.arange(len(unique_b)):
+      this_bval = unique_b[l]
+      prop = b_snr(data, bvals, this_bval, mask)[idx_mask]
       prop_med = np.median(prop)
-      iqr = [stats.scoreatpercentile(prop2,25), stats.scoreatpercentile(prop2,75)]
+      iqr = [stats.scoreatpercentile(prop,25), stats.scoreatpercentile(prop,75)]
       fig = mpl.probability_hist(prop, fig = fig)
       ax = fig.axes[0]
-      ax.text(20.7, txt_height,"b = {0}: Median = {1}, IQR = {2}".format(l*1000, round(prop1_med,2), round(np.abs(iqr1[0] - iqr1[1]),2)),horizontalalignment='center',verticalalignment='center')
+      ax.text(20.7, txt_height,"b = {0}: Median = {1}, IQR = {2}".format(this_bval*1000, round(prop_med,2), round(np.abs(iqr[0] - iqr[1]),2)),horizontalalignment='center',verticalalignment='center')
       txt_height = txt_height + 0.02
-      legend_list.append('b = {0}'.format(l*1000))
+      legend_list.append('b = {0}'.format(this_bval*1000))
     
     plt.legend(legend_list,loc = 'upper right')
     
