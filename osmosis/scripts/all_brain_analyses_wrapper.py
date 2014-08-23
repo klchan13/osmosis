@@ -235,7 +235,7 @@ for sid_idx, sid in enumerate(sid_list):
     other_fnum = subj_file_nums[sid_idx][1]
 
     # Put the output files together.
-    [missing_files_emd, vol_emd] = oio.place_files(emd_file_names, mask_vox_num
+    [missing_files_emd, vol_emd] = oio.place_files(emd_file_names, mask_vox_num,
                                                    emd_fnum, wm_data,
                                                    file_path=data_path,
                                                    save=True)
